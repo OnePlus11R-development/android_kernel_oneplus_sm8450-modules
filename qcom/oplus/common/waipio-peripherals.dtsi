@@ -1,0 +1,315 @@
+#include <dt-bindings/regulator/qcom,rpmh-regulator-levels.h>
+
+&fsa4480 {
+	status = "disabled";
+};
+
+&qupv3_se14_i2c {
+	status = "ok";
+	fsa4480_new: fsa4480_new@42 {
+		status = "ok";
+		compatible = "qcom,fsa4480-i2c";
+		reg = <0x42>;
+	};
+};
+
+&tlmm {
+
+	oplus_fp_common{
+		gpio_id2_default: gpio_id2_default {
+			mux {
+				pins = "gpio42";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio42";
+				drive-strength = <2>;
+				bias-pull-up;
+				input-enable;
+			};
+		};
+	};
+	goodix_fp{
+		gpio_goodix_irq_default: gpio_goodix_irq_default {
+			mux {
+				pins = "gpio40";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio40";
+				drive-strength = <2>;
+				bias-pull-down;
+				input-enable;
+			};
+		};
+	};
+
+	pmx_ts_int_active {
+		ts_int_active: ts_int_active {
+			mux {
+				pins = "gpio21";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio21";
+				drive-strength = <8>;
+				bias-disable;
+				input-enable;
+			};
+		};
+	};
+
+	pmx_ts_reset_active {
+		ts_reset_active: ts_reset_active {
+			mux {
+				pins = "gpio20";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio20";
+				drive-strength = <8>;
+				output-low;
+				bias-disable;
+			};
+		};
+	};
+
+	uphall_tri_state_key_active: uphall_tri_state_key_active {
+		mux {
+			pins = "gpio71";
+			function = "gpio";
+		};
+		config {
+			pins = "gpio71";
+			drive-strength = <2>;
+			bias-pull-up;
+		};
+	};
+	downhall_tri_state_key_active: downhall_tri_state_key_active {
+		mux {
+			pins = "gpio117";
+			function = "gpio";
+		};
+		config {
+			pins = "gpio117";
+			drive-strength = <2>;
+			bias-pull-up;
+		};
+	};
+
+	gpio_wakeup: gpio_wakeup {
+		compatible = "gpio_wakeup";
+		gpio_table = <12 67 98 153 155>;
+	};
+
+};
+
+&soc {
+
+	oplus_fp_common {
+		compatible = "oplus,fp_common";
+		oplus,fp_gpio_num = <1>;
+		oplus,fp_gpio_0 = <&tlmm 42 0x0>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&gpio_id2_default>;
+		goodix_optical_G7 {
+			oplus,fp-id = <1>; /* fp id mapping table */
+			vendor-chip = <11>; /* please refer to the struct fp_vendor_t in oplus_fp_commmon.n */
+			eng-menu = "-1,-1"; /* represents SNR, inclination test item in engineer menu, and 0/1 means off/on */
+			chip-name = "G_OPTICAL_G7";  /* /proc/fp_id, will be displayed in engineer menu  */
+		};
+	};
+	goodix_fp {
+		status = "ok";
+		compatible = "goodix,goodix_fp";
+		interrupt-parent = <&tlmm>;
+		interrupts = <40 0>;
+		ldo-supply = <&pm8350c_l11>;
+		ldo-config = <3000000 3000000 150000>;
+		goodix,gpio_irq = <&tlmm 40 0x1>;
+		goodix,gpio_reset = <&tlmm 41 0x0>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&gpio_goodix_irq_default>;
+		notify_tpinfo_flag = <1>;
+		power-num = <1>;
+		power_source_1 {
+			power-mode = <1>;
+			power-name = "ldo";
+			power-config = "ldo-config";
+			delay-time = <0>;
+		};
+	};
+
+	/* 2021/09/04 add for oplus secure */
+	oplus_secure_common {
+		compatible = "oplus,secure_common";
+		oplus,sec_reg_num = <0x221C8604>;
+		oplus,sec_en_anti_reg = <0x221C21B0>;
+		oplus,sec_override1_reg = <0x221C21B0>;
+		oplus,override1_en_value = <0x1>;
+	};
+
+	oplus-gpio {
+		compatible = "oplus,oplus-gpio";
+		pinctrl-names = "default", "sim2_det_no_pull", "sim2_det_pull_high", "sim2_det_pull_low";
+		pinctrl-0 = <&esim_gpio &esim_det_gpio &sim2_det_no_pull>;
+		pinctrl-1 = <&sim2_det_no_pull>;
+		pinctrl-2 = <&sim2_det_pull_high>;
+		pinctrl-3 = <&sim2_det_pull_low>;
+		oplus,oplus-gpio-esim = <&tlmm 125 0>;
+		oplus,oplus-esim-det = <&tlmm 129 0>;
+		oplus,oplus-sim2-det = <&pm8350_gpios 8 0>;
+		oplus,uim-reset-pin = "modem_solution";
+	};
+
+	oplus_sim_detect {
+		compatible = "oplus, sim_detect";
+		Hw,sim_det = "modem_det";
+	};
+
+};
+
+&wlan {
+	use-nv-mac;
+};
+
+&tlmm {
+
+	esim_gpio: esim_gpio {
+		mux {
+			pins = "gpio125";
+			function = "gpio";
+		};
+		config {
+			pins = "gpio125";
+			bias-disable; /* NO pull */
+			drive-strength = <2>; /* 2 MA */
+			output-high;
+		};
+	};
+
+	esim_det_gpio: esim_det_gpio {
+		mux {
+			pins = "gpio129";
+			function = "gpio";
+		};
+		config {
+			pins = "gpio129";
+			bias-disable; /* NO pull */
+			drive-strength = <2>; /* 2 MA */
+			output-high;
+		};
+	};
+
+};
+
+&qupv3_se9_i2c {
+	ist8801@19 {
+		compatible = "oplus,hall-ist8801,up";
+		reg = <0x19>;
+		dhall,id = <1>;
+		vdd-supply = <&L7C>;
+		vio-supply = <&S10B>;
+		magnachip,init-interval = <200>;
+		interrupt-parent = <&tlmm>;
+		interrupts = <117 0x02>;
+		dhall,irq-gpio = <&tlmm 117 0x2008>;
+		pinctrl-names = "uphall_tri_state_key_active";
+		pinctrl-0 = <&uphall_tri_state_key_active>;
+	};
+	ist8801@18 {
+		compatible = "oplus,hall-ist8801,down";
+		reg = <0x18>;
+		dhall,id = <2>;
+		vdd-supply = <&L7C>;
+		vio-supply = <&S10B>;
+		magnachip,init-interval = <200>;
+		interrupt-parent = <&tlmm>;
+		interrupts = <71 0x02>;
+		dhall,irq-gpio = <&tlmm 71 0x2008>;
+		pinctrl-names = "downhall_tri_state_key_active";
+		pinctrl-0 = <&downhall_tri_state_key_active>;
+	};
+
+	magnachip@0D {
+		compatible = "oplus,hall-mxm1120,up";
+		reg = <0x0D>;
+		vdd-supply = <&L7C>;
+		vio-supply = <&S10B>;
+		magnachip,init-interval = <200>;
+		interrupt-parent = <&tlmm>;
+		interrupts = <117 0x02>;
+		dhall,irq-gpio = <&tlmm 117 0x2008>;
+		pinctrl-names = "uphall_tri_state_key_active";
+		pinctrl-0 = <&uphall_tri_state_key_active>;
+	};
+	magnachip@0C {
+		compatible = "oplus,hall-mxm1120,down";
+		reg = <0x0C>;
+		vdd-supply = <&L7C>;
+		vio-supply = <&S10B>;
+		magnachip,init-interval = <200>;
+		interrupt-parent = <&tlmm>;
+		interrupts = <71 0x02>;
+		dhall,irq-gpio = <&tlmm 71 0x2008>;
+		pinctrl-names = "downhall_tri_state_key_active";
+		pinctrl-0 = <&downhall_tri_state_key_active>;
+	};
+
+};
+
+&L3C {
+	regulator-min-microvolt = <2800000>;
+	qcom,init-voltage = <3008000>;
+};
+
+&pm8350_gpios {
+
+	sim2_det_no_pull: sim2_det_no_pull {
+			pins = "gpio8";
+			function = "normal";
+			input-enable;
+			power-source = <1>;
+			bias-disable;
+	};
+
+	sim2_det_pull_high: sim2_det_pull_high {
+			pins = "gpio8";
+			function = "normal";
+			input-enable;
+			power-source = <1>;
+			bias-pull-up;
+	};
+
+	sim2_det_pull_low: sim2_det_pull_low {
+			pins = "gpio8";
+			function = "normal";
+			input-enable;
+			power-source = <1>;
+			bias-pull-down;
+	};
+
+};
+
+&pm8350b_haptics {
+
+	qcom,vmax-mv = <1680>;
+	qcom,cl-vmax-mv = <1680>;
+	qcom,lra-period-us = <5882>;
+	qcom,fifo-vmax-mv = <8500>;
+	qcom,old-steady-vmax-mv = <8500>;
+	qcom,cal-data-restore;
+	qcom,fifo-empty-threshold = <480>;
+
+	qcom,vibrator-type = <8151>;//sla0815
+};
+
+&soc {
+	aop-msg-client {
+		compatible = "qcom,debugfs-qmp-client";
+		mboxes = <&qmp_aop 0>;
+		mbox-names = "aop";
+	};
+};
