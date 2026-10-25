@@ -4,3 +4,4 @@
 #include "common/memory.dtsi"
 #include "common/waipio-peripherals.dtsi"
 #include "common/waipio-thermal.dtsi"
+#include "common/waipio-audio.dtsi"

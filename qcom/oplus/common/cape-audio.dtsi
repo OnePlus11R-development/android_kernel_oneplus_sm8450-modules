@@ -1,0 +1,15 @@
+// SPDX-License-Identifier: GPL-2.0-only
+
+#include "waipio-audio.dtsi"
+
+&qupv3_se13_i2c {
+	tfa98xx@34 {
+		tfa-vdd-voltage = <1800000 1800000>;
+		tfa-vdd-current = <200000>;
+	};
+
+	tfa98xx@35 {
+		tfa-vdd-voltage = <1800000 1800000>;
+		tfa-vdd-current = <200000>;
+	};
+};
