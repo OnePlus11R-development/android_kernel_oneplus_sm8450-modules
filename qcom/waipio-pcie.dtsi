@@ -3,6 +3,9 @@
 &soc {
 	pcie0: qcom,pcie@1c00000 {
 		compatible = "qcom,pci-msm";
+		device_type = "pci";		clock-suppressible = <0>, <0>, <0>, <0>, <0>, <0>,
+					<1>, <0>, <0>, <0>,
+					<0>, <0>, <0>, <0>;
 
 		reg = <0x01c00000 0x3000>,
 			<0x01c06000 0x2000>,
@@ -46,12 +49,12 @@
 				&pcie0_clkreq_sleep
 				&pcie0_wake_default>;
 
-		gdsc-vdd-supply = <&gcc_pcie_0_gdsc>;
-		vreg-1p8-supply = <&pm8350_l6>;
+		gdsc-core-vdd-supply = <&gcc_pcie_0_gdsc>;
+		vreg-1p2-supply = <&pm8350_l6>;
 		vreg-0p9-supply = <&pm8350_l5>;
 		vreg-cx-supply = <&VDD_CX_LEVEL>;
 		vreg-mx-supply = <&VDD_MXA_LEVEL>;
-		qcom,vreg-1p8-voltage-level = <1200000 1200000 18200>;
+		qcom,vreg-1p2-voltage-level = <1200000 1200000 18200>;
 		qcom,vreg-0p9-voltage-level = <880000 880000 80900>;
 		qcom,vreg-cx-voltage-level = <RPMH_REGULATOR_LEVEL_MAX
 						RPMH_REGULATOR_LEVEL_NOM 0>;
@@ -87,17 +90,17 @@
 			<&clock_gcc GCC_AGGRE_NOC_PCIE_1_AXI_CLK>,
 			<&clock_gcc GCC_PCIE_0_PIPE_CLK_SRC>,
 			<&clock_gcc PCIE_0_PIPE_CLK>;
-		clock-names = "pcie_0_pipe_clk", "pcie_0_ref_clk_src",
-				"pcie_0_aux_clk", "pcie_0_cfg_ahb_clk",
-				"pcie_0_mstr_axi_clk", "pcie_0_slv_axi_clk",
-				"pcie_0_ldo", "pcie_0_slv_q2a_axi_clk",
-				"pcie_phy_refgen_clk",
+		clock-names = "pcie_pipe_clk", "pcie_ref_clk_src",
+				"pcie_aux_clk", "pcie_cfg_ahb_clk",
+				"pcie_mstr_axi_clk", "pcie_slv_axi_clk",
+				"pcie_clkref_en", "pcie_slv_q2a_axi_clk",
+				"pcie_rate_change_clk",
 				"pcie_ddrss_sf_tbu_clk",
 				"pcie_aggre_noc_0_axi_clk",
 				"pcie_aggre_noc_1_axi_clk", "pcie_pipe_clk_mux",
 				"pcie_pipe_clk_ext_src";
-		max-clock-frequency-hz = <0>, <0>, <0>, <19200000>, <0>, <0>,
-					<0>, <0>, <0>, <0>, <0>, <100000000>,
+		qcom,pcie-clock-frequency = <0>, <0>, <19200000>, <0>, <0>, <0>,
+					<0>, <0>, <100000000>, <0>,
 					<0>, <0>, <0>, <0>;
 
 		resets = <&clock_gcc GCC_PCIE_0_BCR>,
@@ -112,8 +115,8 @@
 
 		qcom,boot-option = <0x1>;
 		qcom,aux-clk-freq = <20>; /* 19.2 MHz */
-		qcom,drv-supported;
-		qcom,no-l0s-supported;
+		qcom,drv-name = "lpass";
+
 		qcom,drv-l1ss-timeout-us = <5000>;
 		qcom,l1-2-th-scale = <2>;
 		qcom,l1-2-th-value = <150>;
@@ -223,7 +226,7 @@
 					0x022C 0x0230 0x0234 0x0238 0x023C
 					0x0600 0x0604 0x1204 0x1210>;
 
-		pcie0_rp: pcie0_rp {
+		pcie0_rp: pcie0_rp@0,0 {
 			reg = <0 0 0 0 0>;
 		};
 	};
@@ -270,6 +273,9 @@
 
 	pcie1: qcom,pcie@1c08000 {
 		compatible = "qcom,pci-msm";
+		device_type = "pci";		clock-suppressible = <0>, <0>, <0>, <0>, <0>, <0>,
+					<1>, <0>, <0>, <0>,
+					<0>, <0>, <0>, <0>;
 
 		reg = <0x01c08000 0x3000>,
 			<0x01c0e000 0x2000>,
@@ -311,15 +317,15 @@
 				&pcie1_clkreq_sleep
 				&pcie1_wake_default>;
 
-		gdsc-vdd-supply = <&gcc_pcie_1_gdsc>;
-		vreg-1p8-supply = <&pm8350_l6>;
+		gdsc-core-vdd-supply = <&gcc_pcie_1_gdsc>;
+		vreg-1p2-supply = <&pm8350_l6>;
 		vreg-0p9-supply = <&pm8450_l2>;
 		vreg-qref-supply = <&pm8350_l5>;
 		vreg-cx-supply = <&VDD_CX_LEVEL>;
 		vreg-mx-supply = <&VDD_MXA_LEVEL>;
 		qcom,target-link-speed = <3>; /* Set max link speed to Gen3 */
 
-		qcom,vreg-1p8-voltage-level = <1200000 1200000 26100>;
+		qcom,vreg-1p2-voltage-level = <1200000 1200000 26100>;
 		qcom,vreg-0p9-voltage-level = <912000 912000 193000>;
 		qcom,vreg-cx-voltage-level = <RPMH_REGULATOR_LEVEL_MAX
 						RPMH_REGULATOR_LEVEL_LOW_SVS 0>;
@@ -356,20 +362,19 @@
 			<&clock_gcc GCC_PCIE_1_PIPE_CLK_SRC>,
 			<&clock_gcc PCIE_1_PIPE_CLK>,
 			<&clock_gcc GCC_PCIE_1_PHY_AUX_CLK>,
-			<&clock_gcc GCC_PCIE_1_PHY_AUX_CLK_SRC>,
-			<&clock_gcc PCIE_1_PHY_AUX_CLK>;
-		clock-names = "pcie_1_pipe_clk", "pcie_1_ref_clk_src",
-				"pcie_1_aux_clk", "pcie_1_cfg_ahb_clk",
-				"pcie_1_mstr_axi_clk", "pcie_1_slv_axi_clk",
-				"pcie_1_ldo", "pcie_1_slv_q2a_axi_clk",
-				"pcie_phy_refgen_clk",
+			<&clock_gcc GCC_PCIE_1_PHY_AUX_CLK_SRC>;
+		clock-names = "pcie_pipe_clk", "pcie_ref_clk_src",
+				"pcie_aux_clk", "pcie_cfg_ahb_clk",
+				"pcie_mstr_axi_clk", "pcie_slv_axi_clk",
+				"pcie_clkref_en", "pcie_slv_q2a_axi_clk",
+				"pcie_rate_change_clk",
 				"pcie_ddrss_sf_tbu_clk",
 				"pcie_aggre_noc_1_axi_clk", "pcie_pipe_clk_mux",
 				"pcie_pipe_clk_ext_src", "pcie_phy_aux_clk",
-				"pcie_phy_aux_clk_mux", "pcie_phy_aux_clk_ext_src";
-		max-clock-frequency-hz = <0>, <0>, <0>, <19200000>, <0>, <0>,
-					<0>, <0>, <0>, <0>, <0>, <100000000>,
-					<0>, <0>, <0>, <0>, <0>, <0>;
+				"pcie_phy_aux_clk_mux";
+		qcom,pcie-clock-frequency = <0>, <0>, <19200000>, <0>, <0>, <0>,
+					<0>, <0>, <100000000>, <0>,
+					<0>, <0>, <0>, <0>;
 
 		resets = <&clock_gcc GCC_PCIE_1_BCR>,
 			<&clock_gcc GCC_PCIE_1_PHY_BCR>;
@@ -382,7 +387,7 @@
 			<0x100 &apps_smmu 0x1c81 0x1>;
 
 		qcom,boot-option = <0x1>;
-		qcom,drv-supported;
+		qcom,drv-name = "lpass";
 		qcom,drv-l1ss-timeout-us = <5000>;
 		qcom,aux-clk-freq = <17>; /* 16.6 MHz */
 		qcom,eq-fmdc-t-min-phase23 = <1>;
@@ -562,7 +567,7 @@
 					0x1214 0x1218 0x121C 0x1220 0x1224
 					0x1228 0x122C 0x1230 0x1234 0x1238
 					0x123C 0x1400 0x1404>;
-		pcie1_rp: pcie1_rp {
+		pcie1_rp: pcie1_rp@0,0 {
 			reg = <0 0 0 0 0>;
 		};
 	};
@@ -648,13 +653,13 @@
 		perst-gpio = <&tlmm 97 GPIO_ACTIVE_HIGH>;
 		wake-gpio = <&tlmm 99 GPIO_ACTIVE_HIGH>;
 
-		gdsc-vdd-supply = <&gcc_pcie_1_gdsc>;
-		vreg-1p8-supply = <&pm8350_l6>;
+		gdsc-core-vdd-supply = <&gcc_pcie_1_gdsc>;
+		vreg-1p2-supply = <&pm8350_l6>;
 		vreg-0p9-supply = <&pm8450_l2>;
 		vreg-mx-supply = <&VDD_MXA_LEVEL>;
 		vreg-cx-supply = <&VDD_CX_LEVEL>;
 
-		qcom,vreg-1p8-voltage-level = <1200000 1200000 30000>;
+		qcom,vreg-1p2-voltage-level = <1200000 1200000 30000>;
 		qcom,vreg-0p9-voltage-level = <912000 912000 193000>;
 		qcom,vreg-mx-voltage-level = <RPMH_REGULATOR_LEVEL_MAX RPMH_REGULATOR_LEVEL_NOM 0>;
 		qcom,vreg-cx-voltage-level = <RPMH_REGULATOR_LEVEL_MAX RPMH_REGULATOR_LEVEL_LOW_SVS 0>;
