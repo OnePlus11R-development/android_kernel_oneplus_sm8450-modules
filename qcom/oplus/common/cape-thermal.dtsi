@@ -1,0 +1,14 @@
+
+&soc {
+	oplus-omrg {
+		compatible = "oplus,oplus-omrg";
+		oplus-omrg0 {
+			oplus,divider-cells = <2>;
+			oplus,omrg-master = <&CPU4 1555200 1996800>;
+			oplus,omrg-slave = <&CPU0 1440000 1804800>;
+			up_limit_enable;
+			/* down_limit_enable; */
+			/* thermal_enable; */
+		};
+	};
+};

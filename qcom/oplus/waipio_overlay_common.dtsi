@@ -3,3 +3,4 @@
 #include "common/volume-keys.dtsi"
 #include "common/memory.dtsi"
 #include "common/waipio-peripherals.dtsi"
+#include "common/waipio-thermal.dtsi"

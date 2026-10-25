@@ -3,3 +3,4 @@
 #include "common/volume-keys.dtsi"
 #include "common/cape-memory.dtsi"
 #include "common/cape-peripherals.dtsi"
+#include "common/cape-thermal.dtsi"
