@@ -1,0 +1,22 @@
+// SPDX-License-Identifier: GPL-2.0-only
+
+&pmk8350 {
+	pon_hlos@1300 {
+		resin {
+			linux,code = <KEY_VOLUMEUP>;
+		};
+	};
+};
+
+&soc {
+	gpio_keys {
+		pinctrl-names = "default";
+		pinctrl-0 = <&key_vol_up_default>;
+
+		vol_up {
+			label = "volume_down";
+			linux,code = <KEY_VOLUMEDOWN>;
+			wakeup-source;
+		};
+	};
+};
