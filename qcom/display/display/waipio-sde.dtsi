@@ -1,0 +1,24 @@
+// SPDX-License-Identifier: GPL-2.0-only
+
+#include "cape-sde.dtsi"
+
+&sde_dp {
+	qcom,pll-revision = "5nm-v1";
+	vdda-1p2-supply = <&L6B>;
+};
+
+&mdss_dsi0 {
+	vdda-1p2-supply = <&L6B>;
+};
+
+&mdss_dsi1 {
+	vdda-1p2-supply = <&L6B>;
+};
+
+&mdss_dsi_phy0 {
+	compatible = "qcom,dsi-phy-v4.3";
+};
+
+&mdss_dsi_phy1 {
+	compatible = "qcom,dsi-phy-v4.3";
+};

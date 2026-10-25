@@ -3074,7 +3074,7 @@
 #include "waipio-debug.dtsi"
 #include "waipio-pcie.dtsi"
 #include "msm-rdbg.dtsi"
-#include "waipio-gpu.dtsi"
+#include "graphics/gpu/waipio-gpu.dtsi"
 #include "waipio-thermal.dtsi"
 
 &pcie0_rp {
@@ -3131,6 +3131,15 @@
 	};
 };
 
+
+#include "waipio-walt.dtsi"
+#include "audio/waipio-audio.dtsi"
+#include "camera/waipio-camera.dtsi"
+#include "display/display/waipio-sde.dtsi"
+#include "dsp/cape/cape-dsp.dtsi"
+#include "mmrm/waipio-mmrm.dtsi"
+#include "synx/synx/waipio-synx.dtsi"
+#include "video/waipio-vidc.dtsi"
 
 &soc {
 	qcom_ramoops: qcom-ramoops {
