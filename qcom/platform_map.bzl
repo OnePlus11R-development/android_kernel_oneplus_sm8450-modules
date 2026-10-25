@@ -602,7 +602,7 @@ _platform_map = {
             {"name": "waipiop-v2.dtb"},
         ],
         "dtbo_list": [
-            {"name": "waipio-mtp-pm8010-overlay.dtbo"},
+            {"name": "ferrari-21631-waipio-overlay.dtbo"},
         ],
     },
 }

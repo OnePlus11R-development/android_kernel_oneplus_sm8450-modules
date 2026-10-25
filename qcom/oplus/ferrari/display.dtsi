@@ -1,0 +1,109 @@
+// SPDX-License-Identifier: GPL-2.0-only
+
+#include <dt-bindings/clock/qcom,dispcc-waipio.h>
+
+#include "../../display/display/cape-sde-display-pinctrl.dtsi"
+#include "dsi-panel-oplus21631-samsung-1440-3216-dsc-cmd-t0.dtsi"
+#include "dsi-panel-oplus21631-samsung-1440-3216-dsc-cmd-t0-overlay.dtsi"
+
+&sde_dp {
+	qcom,dp-aux-switch = <&fsa4480_new>;
+};
+
+&qupv3_se4_i2c {
+	synaptics21631@4B {
+		panel = <&dsi_oplus21631_samsung_1440_3216_dsc_cmd_t0>;
+	};
+};
+
+&battery_charger {
+	panel = <&dsi_oplus21631_samsung_1440_3216_dsc_cmd_t0>;
+};
+
+&soc {
+	goodix_fp {
+		panel = <&dsi_oplus21631_samsung_1440_3216_dsc_cmd_t0>;
+	};
+};
+
+&soc {
+	dsi_panel_oplus_optimization_pwr_supply: dsi_panel_oplus_optimization_pwr_supply {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		qcom,panel-supply-entry@0 {
+			reg = <0>;
+			qcom,supply-name = "vddio";
+			qcom,supply-min-voltage = <1800000>;
+			qcom,supply-max-voltage = <1800000>;
+			qcom,supply-enable-load = <200000>;
+			qcom,supply-disable-load = <80>;
+			qcom,supply-post-on-sleep = <0>;
+		};
+
+		qcom,panel-supply-entry@1 {
+			reg = <1>;
+			qcom,supply-name = "vci";
+			qcom,supply-min-voltage = <3000000>;
+			qcom,supply-max-voltage = <3000000>;
+			qcom,supply-enable-load = <2000>;
+			qcom,supply-disable-load = <0>;
+			qcom,supply-post-on-sleep = <0>;
+		};
+
+		qcom,panel-supply-entry@2 {
+			reg = <2>;
+			qcom,supply-name = "lab";
+			qcom,supply-min-voltage = <4600000>;
+			qcom,supply-max-voltage = <6000000>;
+			qcom,supply-enable-load = <0>;
+			qcom,supply-disable-load = <0>;
+		};
+
+		qcom,panel-supply-entry@3 {
+			reg = <3>;
+			qcom,supply-name = "ibb";
+			qcom,supply-min-voltage = <4600000>;
+			qcom,supply-max-voltage = <6000000>;
+			qcom,supply-enable-load = <0>;
+			qcom,supply-disable-load = <0>;
+			qcom,supply-post-on-sleep = <0>;
+		};
+	};
+	sde_dsi: qcom,dsi-display-primary {
+		compatible = "qcom,dsi-display";
+		label = "primary";
+
+		qcom,dsi-ctrl = <&mdss_dsi0 &mdss_dsi1>;
+		qcom,dsi-phy = <&mdss_dsi_phy0 &mdss_dsi_phy1>;
+
+		pinctrl-names = "panel_active", "panel_suspend";
+		pinctrl-0 = <&sde_dsi_active &sde_te_active>;
+		pinctrl-1 = <&sde_dsi_suspend &sde_te_suspend>;
+
+		qcom,platform-te-gpio = <&tlmm 86 0>;
+		qcom,panel-te-source = <0>;
+
+		qcom,mdp = <&mdss_mdp>;
+		qcom,dsi-default-panel = <&dsi_oplus21631_samsung_1440_3216_dsc_cmd_t0>;
+	};
+	oplus_display_dev: oplus,dsi-display-dev {
+		oplus,dsi-panel-primary = <&dsi_oplus21631_samsung_1440_3216_dsc_cmd_t0>;
+		oplus,dsi-panel-secondary = <>;
+		oplus,dsi-panel-extended = <>;
+	};
+};
+
+&sde_dsi {
+	clocks = <&mdss_dsi_phy0 0>, <&mdss_dsi_phy0 1>,
+		<&mdss_dsi_phy1 2>, <&mdss_dsi_phy1 3>,
+		<&clock_dispcc DISP_CC_MDSS_MDP_CLK>;
+	clock-names = "pll_byte_clk0", "pll_dsi_clk0",
+		"pll_byte_clk1", "pll_dsi_clk1", "mdp_core_clk";
+	vddio-supply = <&L12C>;
+	vci-supply = <&L13C>;
+};
+
+&mdss_mdp {
+	connectors = <&sde_dsi &smmu_sde_unsec &smmu_sde_sec &sde_rscc &sde_dp>;
+};

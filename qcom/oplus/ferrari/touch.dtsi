@@ -1,0 +1,126 @@
+&qupv3_se4_i2c {
+	qcom,i2c-touch-active = "synaptics-s3908";
+
+	/delete-node/ focaltech@38;
+	/delete-node/ synaptics_tcm@20;
+
+	/delete-node/ synaptics20031@4B;
+
+	mtp_21631:synaptics21631@4B {
+		compatible = "synaptics-s3908";
+		reg = <0x4B>;
+		chip-name = "S3908";
+
+		/* Interrupt && Irq-gpio */
+		interrupt-parent = <&tlmm>;
+		interrupts = <21 0x2008>;
+
+		/* Power Config */
+
+		enable1v8_gpio = <&tlmm 97 0x1>;
+		vdd_2v8-supply = <&L3C>;
+		vcc_1v8-supply = <&L4H>;
+		vdd_2v8_volt = <3008000>;
+
+		/* Other HW Resource */
+		irq-gpio = <&tlmm 21 0x2008>;
+		reset-gpio = <&tlmm 20 0x1>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&ts_int_active &ts_reset_active>;
+
+		touchpanel,max-num-support = <10>;
+		touchpanel,tx-rx-num = <17 38>;
+		earsense,tx-rx-num = <17 18>;
+		touchpanel,panel-coords = <5760 12864>;
+		touchpanel,display-coords = <1440 3216>;
+		touchpanel,touchmajor-limit = <256 256>;
+		touchpanel,int-mode = <1>; /*0: interrupt and disable, 1:interrupt and not disable*/
+		touchpanel,curved-size = <45>;
+
+		prevention,curved_screen_V2;
+		prevention,grip_disable_level = <6>;
+		prevention,updelay_time_ms = <30>;
+		prevention,makeup_cnt_weight = <4 1 2 2 2>;
+		prevention,large_corner_range = <600 1500>;
+		prevention,large_corner_judge_condition = <500 100 600 6 6>;
+		prevention,trx_reject_condition = <8 7 7>;
+		prevention,trx_strict_reject_condition = <8 5 5>;
+		prevention,large_judge_time_ms = <500 50 40>;
+		prevention,large_exit_condition = <8 8 2>;
+		prevention,single_channel_width = <160 160>;
+		prevention,normal_tap_condition = <10 300>;
+		prevention,long_edge_condition = <230 90 180 80>;
+		prevention,long_strict_edge_condition = <160 60>;
+		prevention,long_fingerhold_condition = <50 6 4 4>;
+		prevention,short_edge_condition = <200 90 180 80>;
+		prevention,short_strict_edge_condition = <160 60>;
+		prevention,large_strict_exit_condition = <2 2>;
+		prevention,top_corner_config = <280 800 240>;
+		prevention,edge_swipe_config = <150 400>;
+
+		touchpanel,smooth-level = <0 1 2 4 7 9>;
+		touchpanel,smooth-level-charging = <0 2 4 7 8 9>;
+		touchpanel,sensitive-level = <0 70 55 40 25 10>;
+		touchpanel,single-optimized-time = <8>;
+		touchpanel,high-frame-rate-time = <60>;
+
+		end_stretch_value = <480 250 16 16>;
+
+		touchpanel,tp_ic_type = <2>;
+		panel_type = <8 8>;
+
+		firmware_name = "SS", "SS";
+		platform_support_project = <20031 21631 0x216AC>;
+		platform_support_project_dir = <21631 21631 21631>;
+		platform_support_project_commandline = "mdss_dsi_oplus20031_samsung_1440_3216_dsc_cmd","mdss_dsi_oplus21631_samsung_1440_3216_dsc_cmd_t0";
+
+		/* SW Support Feature Control */
+		black_gesture_support;
+		sportify_aod_gesture_support;
+
+		pressure_report_support;
+		charger_pump_support;
+		game_switch_support;
+		smart_gesture_support;
+		fw_update_app_support;
+		fingerprint_underscreen_support;
+		exception_upload_support;
+		freq_hop_simulate_support;
+		report_flow_unlock_support;
+		screenoff_fingerprint_info_support;
+		irq_need_dev_resume_ok;
+
+		enable_point_auto_change;
+		report_rate_white_list_support;
+		kernel_grip_support;
+
+		health_monitor_support;
+		black_gesture_indep_support;
+		algorithm_support;
+
+		/*
+		 *Virtual Key Config:
+		 *1:touchpanel,button-type: <virtualkey_type  supportted_button-map>
+		 *virtualkey_type:
+		 *Type 1: using board_properties
+		 *Type 2: using same IC (button zone&& touch zone are seprate)
+		 *Type 3: using diffrent IC (button zone&& touch zone are seprate)
+		 *Type 4: No need of virtual key process
+		 *supportted_button-map:select|menu|home|back
+		 *
+		 *2:touchpanel,button-map
+		 *type (X1,Y1)(X2,Y2)(X3,Y3)(Width_X,Hight_Y)--Only when button-type is 0
+		 */
+		touchpanel,button-type = <4>;
+		touchpanel.button-TRx = <0 0>;
+
+		S3908 {
+			report_rate_default = <60>;
+			report_rate_game_value = <2>;
+			default_gesture_mask = <8191>;
+			fwupdate_bootloader = <1>;
+		};
+	};
+
+};
+#include "../tp/mtp21631-s3908-firmware.dtsi"
