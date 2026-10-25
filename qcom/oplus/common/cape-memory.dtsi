@@ -1,0 +1,15 @@
+// SPDX-License-Identifier: GPL-2.0-only
+
+#include "memory.dtsi"
+
+&cdsp_secure_heap_mem {
+	reg = <0x0 0x80c00000 0x0 0x100000>;
+};
+
+&slpi_mem {
+	reg = <0x0 0x87f00000 0x0 0x1a00000>;
+};
+
+&qheebsp_reserved_mem {
+	reg = <0x0 0xe0000000 0x0 0>;
+};

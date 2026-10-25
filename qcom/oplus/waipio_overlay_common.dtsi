@@ -1,3 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-only
 
 #include "common/volume-keys.dtsi"
+#include "common/memory.dtsi"

@@ -1,0 +1,43 @@
+&soc {
+	bootloader_log {
+		compatible = "bootloader_log";
+		linux,contiguous-region = <&bootloader_log_mem>;
+	};
+};
+
+&soc {
+	dump_device_info {
+		compatible = "dump_device_info";
+		linux,contiguous-region = <&dump_device_info_mem>;
+	};
+};
+
+&soc {
+		oplus-pmic-monitor-log {
+			compatible = "oplus,pmic-monitor-log";
+			nvmem = <&pmk8350_sdam_5>;
+			nvmem-names = "pon_log";
+		};
+};
+
+&reserved_memory {
+
+	dump_device_info_mem: device_info_mem@0xA4F00000 {
+		reg = <0 0xA4F00000 0 0x00008000>;
+		label = "dump_device_info_mem";
+	};
+
+	bootloader_log_mem: botloader_mem@0xA7605000 {
+		reg = <0 0xA7605000 0 0x00008000>;
+		label = "bootloader_log_mem";
+	};
+
+};
+
+&video_mem {
+	reg = <0x0 0x9fd00000 0x0 0x700000>;
+};
+
+&adsp_mem {
+	reg = <0x0 0x85700000 0x0 0x2800000>;
+};
